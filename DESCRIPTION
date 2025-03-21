@@ -1,0 +1,15 @@
+Package: customGSVA
+Title: Custom GSVA with AUCell Integration
+Version: 0.1.0
+Authors@R: person("Sara", "Alazzam", email = "saraalazzam15@gmail.com", role = c("aut", "cre"))
+Description: Extends GSVA with AUCell for single-sample gene set enrichment analysis.
+License: MIT
+Imports:
+    GSVA,
+    AUCell,
+    SummarizedExperiment
+RoxygenNote: 7.3.2
+Encoding: UTF-8
+
+
+

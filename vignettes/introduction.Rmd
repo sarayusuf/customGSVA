@@ -1,0 +1,27 @@
+---
+title: "Introduction to customGSVA"
+output: rmarkdown::html_vignette
+---
+
+```{r setup}
+library(customGSVA)
+```
+
+
+```{r setup}
+# Example expression matrix
+expr <- matrix(rnorm(1000), nrow = 100, ncol = 10)
+rownames(expr) <- paste0("Gene", 1:100)  # Add gene names
+
+# Example gene set list
+gset.idx.list <- list(
+  Pathway1 = c("Gene1", "Gene2", "Gene3"),
+  Pathway2 = c("Gene4", "Gene5", "Gene6"),
+  Pathway3 = c("Gene7", "Gene8", "Gene9")
+)
+
+# Run GSVA
+es_gsva <- gsva(expr, gset.idx.list, method = "gsva")
+
+# Run AUCell
+es_aucell <- gsva(expr, gset.idx.list, method = "aucell")
