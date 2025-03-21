@@ -13,19 +13,19 @@
 #' @export
 gsva <- function(expr, gset.idx.list, method = c("gsva", "ssgsea", "zscore", "plage", "aucell"),
                  kcdf = c("Gaussian", "Poisson", "none"), aucMaxRank = NULL, ...) {
-
+  
   # Match method and kcdf arguments
   method <- match.arg(method)
   kcdf <- match.arg(kcdf)
-
+  
   # Handle AUCell separately
   if (method == "aucell") {
     if (!requireNamespace("AUCell", quietly = TRUE))
       stop("Install the 'AUCell' package to use method='aucell'.")
-
+    
     # Build gene rankings
     rankings <- AUCell::AUCell_buildRankings(expr, plotStats = FALSE, verbose = FALSE)
-
+    
     # Calculate AUC scores
     auc_scores <- AUCell::AUCell_calcAUC(
       geneSets = gset.idx.list,
@@ -33,7 +33,7 @@ gsva <- function(expr, gset.idx.list, method = c("gsva", "ssgsea", "zscore", "pl
       aucMaxRank = if (is.null(aucMaxRank)) ceiling(0.05 * nrow(expr)) else aucMaxRank,
       ...
     )
-
+    
     # Extract AUC scores
     es <- SummarizedExperiment::assay(auc_scores)
   } else {
@@ -45,10 +45,10 @@ gsva <- function(expr, gset.idx.list, method = c("gsva", "ssgsea", "zscore", "pl
       "zscore"  = GSVA::zscoreParam(expr, gset.idx.list, ...),  # Remove kcdf for zscore
       "plage"   = GSVA::plageParam(expr, gset.idx.list, ...)    # Remove kcdf for plage
     )
-
+    
     # Run GSVA
     es <- GSVA::gsva(param)
   }
-
+  
   return(es)
 }
