@@ -11,8 +11,34 @@
 #' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC
 #' @importFrom SummarizedExperiment assay
 #' @export
+#' @examples
+#' # Example expression matrix
+#' expr <- matrix(rnorm(1000), nrow = 100, ncol = 10)
+#' rownames(expr) <- paste0("Gene", 1:100)
+#' 
+#' # Example gene set list
+#' gset.idx.list <- list(
+#'   Pathway1 = c("Gene1", "Gene2", "Gene3"),
+#'   Pathway2 = c("Gene4", "Gene5", "Gene6"),
+#'   Pathway3 = c("Gene7", "Gene8", "Gene9")
+#' )
+#' 
+#' # Run GSVA
+#' es_gsva <- gsva(expr, gset.idx.list, method = "gsva")
+#' 
+#' # Run AUCell
+#' es_aucell <- gsva(expr, gset.idx.list, method = "aucell")
 gsva <- function(expr, gset.idx.list, method = c("gsva", "ssgsea", "zscore", "plage", "aucell"),
                  kcdf = c("Gaussian", "Poisson", "none"), aucMaxRank = NULL, ...) {
+  
+  # Validate inputs
+  if (!is.matrix(expr) || !is.numeric(expr)) {
+    stop("expr must be a numeric matrix.")
+  }
+  
+  if (!is.list(gset.idx.list) || is.null(names(gset.idx.list))) {
+    stop("gset.idx.list must be a named list.")
+  }
   
   # Match method and kcdf arguments
   method <- match.arg(method)
@@ -20,8 +46,12 @@ gsva <- function(expr, gset.idx.list, method = c("gsva", "ssgsea", "zscore", "pl
   
   # Handle AUCell separately
   if (method == "aucell") {
-    if (!requireNamespace("AUCell", quietly = TRUE))
-      stop("Install the 'AUCell' package to use method='aucell'.")
+    if (!requireNamespace("AUCell", quietly = TRUE)) {
+      stop(
+        "The 'AUCell' package is required for method='aucell'. ",
+        "Install it using: BiocManager::install('AUCell')"
+      )
+    }
     
     # Build gene rankings
     rankings <- AUCell::AUCell_buildRankings(expr, plotStats = FALSE, verbose = FALSE)
