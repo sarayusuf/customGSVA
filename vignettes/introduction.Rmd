@@ -3,12 +3,14 @@ title: "Introduction to customGSVA"
 output: rmarkdown::html_vignette
 ---
 
+
+
 ```{r setup}
 library(customGSVA)
 ```
 
 
-```{r setup}
+```{r}
 # Example expression matrix
 expr <- matrix(rnorm(1000), nrow = 100, ncol = 10)
 rownames(expr) <- paste0("Gene", 1:100)  # Add gene names
@@ -25,3 +27,5 @@ es_gsva <- gsva(expr, gset.idx.list, method = "gsva")
 
 # Run AUCell
 es_aucell <- gsva(expr, gset.idx.list, method = "aucell")
+```
+
